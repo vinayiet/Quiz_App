@@ -6,24 +6,43 @@ This project is a simple and interactive JavaScript Quiz App. It demonstrates th
 
 ## Features
 
-- **Dynamic Quiz Questions**: The quiz displays multiple questions with multiple-choice answers.
+- **Dynamic Quiz Questions**: The quiz displays multiple questions with multiple-choice answers fetched from an API.
 - **Progress Bar**: A visual progress bar that updates as the user progresses through the quiz.
 - **Timer**: A countdown timer for each question to add a sense of urgency.
 - **Next Button**: A "Next Question" button that allows users to move to the next question after submitting an answer.
 - **Results Display**: Displays the number of correct answers at the end of the quiz.
 - **Congratulatory Message**: A special message for users who answer all questions correctly.
+- **User Data Storage**: Stores user data in a MongoDB database.
 
 ## Technologies Used
 
 - **HTML**: For structuring the content of the quiz app.
 - **CSS**: For styling the quiz app and adding animations.
 - **JavaScript**: For implementing the quiz logic, handling user interactions, and updating the UI dynamically.
+- **Node.js**: For creating the backend server.
+- **Express.js**: For handling backend routes and middleware.
+- **MongoDB**: For storing user data.
 
 ## How to Run the Project
+
+### Frontend
 
 1. Clone the repository to your local machine.
 2. Navigate to the `Quiz_App` directory.
 3. Open the `index.html` file in your web browser.
+
+### Backend
+
+1. Navigate to the `Quiz_App/backend` directory.
+2. Install the dependencies:
+    ```bash
+    npm install
+    ```
+3. Start the server:
+    ```bash
+    node server.js
+    ```
+4. The server will run on `http://localhost:3000`.
 
 ## Code Highlights
 
@@ -100,34 +119,17 @@ button:hover {
 
 ### JavaScript
 
-The JavaScript file handles the quiz logic, including displaying questions, updating the progress bar, managing the timer, and showing results.
+The JavaScript file handles the quiz logic, including fetching questions from an API, displaying questions, updating the progress bar, managing the timer, and showing results.
 
 ```javascript
 // ...existing code...
-function showResults() {
-    clearInterval(timer);
-    const answerContainers = quizContainer.querySelectorAll('.answers');
-    let numCorrect = 0;
-    quizQuestions.forEach((currentQuestion, questionNumber) => {
-        const answerContainer = answerContainers[questionNumber];
-        const selector = `input[name=question${questionNumber}]:checked`;
-        const userAnswer = (answerContainer.querySelector(selector) || {}).value;
-        if (userAnswer === currentQuestion.correctAnswer) {
-            numCorrect++;
-            answerContainers[questionNumber].style.color = 'green';
-        } else {
-            answerContainers[questionNumber].style.color = 'red';
-        }
-    });
-    if (numCorrect === quizQuestions.length) {
-        resultsContainer.innerHTML = `Congratulations! You answered all questions correctly!`;
-    } else {
-        resultsContainer.innerHTML = `${numCorrect} out of ${quizQuestions.length}`;
+async function fetchQuestions() {
+    try {
+        const response = await fetch('https://api.example.com/quiz-questions');
+        quizQuestions = await response.json();
+        buildQuiz();
+    } catch (error) {
+        console.error('Error fetching questions:', error);
     }
 }
 // ...existing code...
-```
-
-## Conclusion
-
-This project showcases the ability to create a dynamic and interactive web application using HTML, CSS, and JavaScript. It demonstrates skills in DOM manipulation, event handling, and UI/UX design.
